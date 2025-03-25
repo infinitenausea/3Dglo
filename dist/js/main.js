@@ -1,1 +1,0 @@
-(()=>{"use strict";console.log("This is one.js!"),console.log("This is two.js!")})();
