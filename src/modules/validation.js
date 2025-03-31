@@ -21,7 +21,7 @@ const validation = () => {
         });
 
         // Дополнительная проверка при потере фокуса
-        input.addEventListener('blur', () => {
+        input.addEventListener('blur', function () {
             this.value = this.value.replace(/\D/g, '');
         });
     });
@@ -29,14 +29,11 @@ const validation = () => {
     // 2. Проверка работоспособности SELECT
     const calcSelect = document.querySelector('.calc-type');
     if (calcSelect) {
-        calcSelect.addEventListener('change', () => {
+        calcSelect.addEventListener('change', function () {
             // Проверяем, что выбранный текст отображается
             const selectedOption = this.options[this.selectedIndex];
             console.log('Выбрано значение:', selectedOption.textContent);
 
-            // Если нужно дополнительно что-то сделать после выбора
-            // Например, вызвать пересчет калькулятора
-            // Здесь можно добавить соответствующий код
         });
     }
 
@@ -69,8 +66,22 @@ const validation = () => {
             });
 
             // Дополнительная проверка при потере фокуса
-            input.addEventListener('blur', () => {
-                this.value = this.value.replace(/[^а-яА-ЯёЁ \-]/g, '');
+            input.addEventListener('blur', function () {
+                // 1. Удаляем все символы, кроме допустимых (кириллица, дефис, пробел)
+                let value = this.value.replace(/[^а-яА-ЯёЁ \-]/g, '');
+
+                // 2. Заменяем несколько идущих подряд пробелов или дефисов на один
+                value = value.replace(/\s+/g, ' ').replace(/-+/g, '-');
+
+                // 3. Удаляем пробелы и дефисы в начале и конце значения
+                value = value.trim().replace(/^-+|-+$/g, '');
+
+                // 4. Первая буква каждого слова к верхнему регистру, остальные к нижнему
+                value = value.toLowerCase().replace(/(^|\s)([а-яёa-z])/g, function (match, p1, p2) {
+                    return p1 + p2.toUpperCase();
+                });
+
+                this.value = value;
             });
         });
 
@@ -94,8 +105,17 @@ const validation = () => {
             });
 
             // Дополнительная проверка при потере фокуса
-            input.addEventListener('blur', () => {
-                this.value = this.value.replace(/[^a-zA-Z0-9@\-_.!~*']/g, '');
+            input.addEventListener('blur', function () {
+                // 1. Удаляем все символы, кроме допустимых
+                let value = this.value.replace(/[^a-zA-Z0-9@\-_.!~*']/g, '');
+
+                // 2. Заменяем несколько идущих подряд дефисов на один
+                value = value.replace(/-+/g, '-');
+
+                // 3. Удаляем дефисы в начале и конце значения
+                value = value.replace(/^-+|-+$/g, '');
+
+                this.value = value;
             });
         });
 
@@ -119,8 +139,17 @@ const validation = () => {
             });
 
             // Дополнительная проверка при потере фокуса
-            input.addEventListener('blur', () => {
-                this.value = this.value.replace(/[^\d()\-]/g, '');
+            input.addEventListener('blur', function () {
+                // 1. Удаляем все символы, кроме допустимых (цифры, скобки, дефис)
+                let value = this.value.replace(/[^\d()\-]/g, '');
+
+                // 2. Заменяем несколько идущих подряд дефисов на один
+                value = value.replace(/-+/g, '-');
+
+                // 3. Удаляем дефисы в начале и конце значения
+                value = value.replace(/^-+|-+$/g, '');
+
+                this.value = value;
             });
         });
     });
